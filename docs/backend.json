@@ -1,0 +1,159 @@
+{
+  "entities": {
+    "Barber": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Barber",
+      "type": "object",
+      "description": "Represents a barber or stylist working at the salon.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the barber, typically Firebase UID." },
+        "name": { "type": "string", "description": "Name of the barber." },
+        "specialty": { "type": "string", "description": "Specialty of the barber (e.g., Classic Cuts, Modern Fades)." },
+        "imageUrl": { "type": "string", "description": "URL to a photo of the barber." }
+      },
+      "required": ["id", "name"]
+    },
+    "Salon": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Salon",
+      "type": "object",
+      "description": "Represents the single salon location.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the salon." },
+        "name": { "type": "string", "description": "Name of the salon." },
+        "address": { "type": "string", "description": "Physical address of the salon." },
+        "phone": { "type": "string", "description": "Contact phone number for the salon." },
+        "openingHours": { "type": "object", "description": "Opening hours for each day." }
+      },
+      "required": ["id", "name"]
+    },
+    "Service": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Service",
+      "type": "object",
+      "description": "Represents a service offered by the salon (e.g., haircut, shave).",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the service." },
+        "name": { "type": "string", "description": "Name of the service." },
+        "price": { "type": "number", "description": "Price of the service." },
+        "duration": { "type": "number", "description": "Duration of the service in minutes." },
+        "description": { "type": "string", "description": "A brief description of the service."}
+      },
+      "required": ["id", "name", "price", "duration"]
+    },
+     "Appointment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Appointment",
+      "type": "object",
+      "description": "Represents an appointment booked by a customer.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the appointment." },
+        "barberId": { "type": "string", "description": "Reference to the Barber." },
+        "serviceId": { "type": "string", "description": "Reference to the Service." },
+        "customerName": { "type": "string", "description": "Name of the customer." },
+        "customerPhone": { "type": "string", "description": "Phone number of the customer." },
+        "startTime": { "type": "string", "format": "date-time", "description": "Start time of the appointment." },
+        "status": { "type": "string", "enum": ["Scheduled", "Completed", "Cancelled"], "description": "Status of the appointment." }
+      },
+      "required": ["id", "barberId", "serviceId", "customerName", "startTime", "status"]
+    },
+    "GalleryImage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "GalleryImage",
+      "type": "object",
+      "description": "Represents an image in the salon's gallery.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the gallery image." },
+        "imageUrl": { "type": "string", "description": "URL of the image." },
+        "description": { "type": "string", "description": "Description or style name for the image." },
+        "barberId": { "type": "string", "description": "Reference to the barber who did the work." }
+      },
+      "required": ["id", "imageUrl"]
+    },
+    "Testimonial": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Testimonial",
+        "type": "object",
+        "description": "Represents a customer testimonial.",
+        "properties": {
+            "id": { "type": "string", "description": "Unique identifier for the testimonial." },
+            "name": { "type": "string", "description": "Name of the customer." },
+            "handle": { "type": "string", "description": "Role or title of the customer (e.g., Engineer, Designer)." },
+            "text": { "type": "string", "description": "The content of the testimonial." },
+            "avatar": { "type": "string", "description": "URL to the customer's avatar image." }
+        },
+        "required": ["id", "name", "text"]
+    },
+    "SiteSettings": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SiteSettings",
+      "type": "object",
+      "description": "Stores global settings for the website.",
+      "properties": {
+        "brandName": { "type": "string", "description": "The name of the barber shop brand." },
+        "heroTitle": { "type": "string", "description": "The main headline on the homepage." },
+        "heroSubtitle": { "type": "string", "description": "The supporting text under the main headline on the homepage." },
+        "aboutStory": { "type": "string", "description": "The main story text on the 'About Us' page." },
+        "testimonialsTitle": { "type": "string", "description": "Title for the testimonials section on the homepage." },
+        "signatureSectionTitle": { "type": "string", "description": "Title for the 'Signature' section on the homepage." },
+        "signatureSectionSubtitle": { "type": "string", "description": "Subtitle for the 'Signature' section on the homepage." },
+        "statsSectionTitle": { "type": "string", "description": "Title for the stats/numbers section on the homepage." },
+        "ctaTitle": { "type": "string", "description": "Title for the main call-to-action block on the homepage." },
+        "ctaSubtitle": { "type": "string", "description": "Subtitle for the main call-to-action block on the homepage." }
+      },
+      "required": ["brandName"]
+    }
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/barbers/{barberId}",
+        "definition": {
+          "entityName": "Barber",
+          "schema": { "$ref": "#/entities/Barber" },
+          "description": "Stores information about each barber."
+        }
+      },
+      {
+        "path": "/services/{serviceId}",
+        "definition": {
+          "entityName": "Service",
+          "schema": { "$ref": "#/entities/Service" },
+          "description": "Stores all available services offered by the salon."
+        }
+      },
+      {
+        "path": "/appointments/{appointmentId}",
+        "definition": {
+          "entityName": "Appointment",
+          "schema": { "$ref": "#/entities/Appointment" },
+          "description": "Stores all appointments for the salon."
+        }
+      },
+      {
+        "path": "/gallery/{imageId}",
+        "definition": {
+          "entityName": "GalleryImage",
+          "schema": { "$ref": "#/entities/GalleryImage" },
+          "description": "Stores images for the salon's lookbook/gallery."
+        }
+      },
+      {
+        "path": "/settings/{settingId}",
+        "definition": {
+            "entityName": "SiteSettings",
+            "schema": { "$ref": "#/entities/SiteSettings"},
+            "description": "Stores global site settings like brand name."
+        }
+      },
+      {
+        "path": "/testimonials/{testimonialId}",
+        "definition": {
+          "entityName": "Testimonial",
+          "schema": { "$ref": "#/entities/Testimonial" },
+          "description": "Stores customer testimonials for the homepage."
+        }
+      }
+    ]
+  }
+}

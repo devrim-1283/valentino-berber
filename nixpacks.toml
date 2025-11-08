@@ -1,0 +1,16 @@
+[phases.setup]
+nixPkgs = ["nodejs-20.x", "postgresql"]
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm start"
+
+[staticAssets]
+".next/static" = "./.next/static"
+"public" = "./public"
+

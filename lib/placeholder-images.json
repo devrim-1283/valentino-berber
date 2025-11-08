@@ -1,0 +1,22 @@
+{
+  "placeholderImages": [
+    {
+      "id": "lowcost-card",
+      "description": "Isometric crypto trading dashboard",
+      "imageUrl": "https://picsum.photos/seed/lowcost/500/300",
+      "imageHint": "isometric crypto trade"
+    },
+    {
+      "id": "multicollateral-card",
+      "description": "Isometric bitcoin blocks and chart",
+      "imageUrl": "https://picsum.photos/seed/multicollateral/500/300",
+      "imageHint": "isometric bitcoin blocks"
+    },
+    {
+      "id": "transparency-card",
+      "description": "Isometric crypto security building",
+      "imageUrl": "https://picsum.photos/seed/transparency/500/300",
+      "imageHint": "isometric crypto security"
+    }
+  ]
+}
