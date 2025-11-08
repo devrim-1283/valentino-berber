@@ -1,9 +1,6 @@
 [variables]
 NODE_VERSION = "20"
 
-[phases.setup]
-nixPkgs = ["nodejs-20.x"]
-
 [phases.install]
 cmds = ["npm install"]
 
@@ -12,7 +9,3 @@ cmds = ["npm run build"]
 
 [start]
 cmd = "npm start"
-
-[staticAssets]
-".next/static" = "./.next/static"
-"public" = "./public"
