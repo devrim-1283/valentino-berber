@@ -58,17 +58,17 @@ function AddBarberDialog({ onBarberAdded }: { onBarberAdded: () => void }) {
         setIsLoading(true);
         try {
             await createBarber({ 
-                name, 
-                specialty,
-                imageUrl: `https://i.pravatar.cc/300?u=${name}` // Placeholder image
+            name, 
+            specialty,
+            imageUrl: `https://i.pravatar.cc/300?u=${name}` // Placeholder image
             });
-            toast({
-                title: "Berber Eklendi!",
-                description: `${name} adlı berber başarıyla eklendi.`
-            });
-            setName('');
-            setSpecialty('');
-            onBarberAdded();
+        toast({
+            title: "Berber Eklendi!",
+            description: `${name} adlı berber başarıyla eklendi.`
+        });
+        setName('');
+        setSpecialty('');
+        onBarberAdded();
         } catch (error: any) {
             toast({
                 title: "Hata",

@@ -1,6 +1,3 @@
-[providers]
-node = "20"
-
 [variables]
 NODE_VERSION = "20"
 

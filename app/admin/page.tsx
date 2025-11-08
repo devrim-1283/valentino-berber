@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
     }
 
     setIsLoading(true);
-    setError('');
+      setError('');
 
     try {
       const response = await fetch('/api/admin/login', {
@@ -45,14 +45,14 @@ export default function AdminLoginPage() {
       }
 
       if (result.authenticated) {
-        sessionStorage.setItem('isAdminAuthenticated', 'true');
-        toast({
-          title: 'Giriş Başarılı',
-          description: 'Yönetici paneline yönlendiriliyorsunuz.',
-        });
-        router.push('/admin/dashboard');
-      } else {
-        setError('Hatalı şifre. Lütfen tekrar deneyin.');
+      sessionStorage.setItem('isAdminAuthenticated', 'true');
+      toast({
+        title: 'Giriş Başarılı',
+        description: 'Yönetici paneline yönlendiriliyorsunuz.',
+      });
+      router.push('/admin/dashboard');
+    } else {
+      setError('Hatalı şifre. Lütfen tekrar deneyin.');
       }
     } catch (err: any) {
       setError(err.message || 'Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.');
