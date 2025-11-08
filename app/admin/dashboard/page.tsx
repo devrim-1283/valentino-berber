@@ -37,6 +37,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { useToast } from '@/hooks/use-toast';
 import { useAppointments } from '@/lib/hooks/use-appointments';
 import { useBarbers, createBarber } from '@/lib/hooks/use-barbers';
+import { useServices } from '@/lib/hooks/use-services';
 import { KeyRound } from 'lucide-react';
 
 const menuItems = [
@@ -313,6 +314,7 @@ export default function AdminDashboardPage() {
 
   const { data: appointments, isLoading: isLoadingAppointments, refetch: refetchAppointments } = useAppointments();
   const { data: barbers, isLoading: isLoadingBarbers, refetch: refetchBarbers } = useBarbers();
+  const { data: services, isLoading: isLoadingServices } = useServices();
 
   const weeklyData = useMemo(() => {
     if (!appointments) return [];
@@ -340,11 +342,16 @@ export default function AdminDashboardPage() {
   }, [appointments]);
 
   const servicePopularity = useMemo(() => {
-      if (!appointments) return [];
+      if (!appointments || !services) return [];
       const counts = appointments.reduce((acc, apt) => {
-          const serviceName = apt.serviceId || apt.service; // Backward compatibility
-          if (serviceName) {
-            acc[serviceName] = (acc[serviceName] || 0) + 1;
+          if (apt.serviceId) {
+            // serviceId can be comma-separated for multiple services
+            const serviceIds = apt.serviceId.split(',').map(s => s.trim());
+            serviceIds.forEach(serviceId => {
+              const service = services.find(s => s.id === serviceId);
+              const serviceName = service?.name || serviceId;
+              acc[serviceName] = (acc[serviceName] || 0) + 1;
+            });
           }
           return acc;
       }, {} as {[key: string]: number});
@@ -352,15 +359,14 @@ export default function AdminDashboardPage() {
       return Object.entries(counts)
           .map(([name, count]) => ({ name, count }))
           .sort((a, b) => b.count - a.count);
-  }, [appointments]);
+  }, [appointments, services]);
 
     const barberPerformance = useMemo(() => {
       if (!appointments || !barbers) return [];
       const counts = appointments.reduce((acc, apt) => {
-          const barberId = apt.barberId || apt.barber;
-          if (barberId) {
-            const barber = barbers.find(b => b.id === barberId);
-            const barberName = barber?.name || barberId;
+          if (apt.barberId) {
+            const barber = barbers.find(b => b.id === apt.barberId);
+            const barberName = barber?.name || apt.barberName || apt.barberId;
             acc[barberName] = (acc[barberName] || 0) + 1;
           }
           return acc;
@@ -435,17 +441,25 @@ export default function AdminDashboardPage() {
                                 {isLoadingAppointments ? (
                                     <Skeleton className="h-40 w-full" />
                                 ) : selectedDayAppointments.length > 0 ? (
-                                    selectedDayAppointments.map((apt: any) => (
+                                    selectedDayAppointments.map((apt: any) => {
+                                        const serviceNames = apt.serviceId 
+                                          ? apt.serviceId.split(',').map((id: string) => {
+                                              const service = services?.find(s => s.id === id.trim());
+                                              return service?.name || id.trim();
+                                            }).join(', ')
+                                          : 'Hizmet belirtilmemiş';
+                                        return (
                                          <div key={apt.id} className="flex items-center gap-4 p-3 rounded-lg bg-muted/50">
                                             <div className="flex-shrink-0 bg-primary text-primary-foreground h-10 w-10 flex items-center justify-center rounded-full font-bold text-sm">
                                                 {format(new Date(apt.startTime), 'HH:mm')}
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-sm sm:text-base">{apt.customerName}</p>
-                                                <p className="text-xs sm:text-sm text-muted-foreground">{apt.serviceId || apt.service}</p>
+                                                <p className="text-xs sm:text-sm text-muted-foreground">{serviceNames}</p>
                                             </div>
                                          </div>
-                                    ))
+                                        );
+                                    })
                                 ) : (
                                     <div className="text-center text-muted-foreground py-10">
                                         <CalendarIcon className="mx-auto h-12 w-12 opacity-50" />
