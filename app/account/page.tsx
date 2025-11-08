@@ -31,7 +31,7 @@ export default function AccountPage() {
   const { settings } = useSiteSettings();
   const { data: appointments, isLoading: isLoadingAppointments } = useAppointments();
   const upcomingAppointments = appointments?.filter(apt => new Date(apt.startTime) > new Date()) || [];
-
+  
   const renderContent = () => {
     switch (activeSection) {
       case 'Genel Bakış':
@@ -60,7 +60,7 @@ export default function AccountPage() {
                 </CardHeader>
                 <CardContent>
                   {isLoadingAppointments ? (
-                    <Skeleton className="h-8 w-1/2" />
+                     <Skeleton className="h-8 w-1/2" />
                   ) : (
                     <div className="text-2xl font-bold">{appointments?.length || 0}</div>
                   )}
@@ -69,22 +69,22 @@ export default function AccountPage() {
               </Card>
             </div>
             <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Hızlı Eylemler</CardTitle>
-              </CardHeader>
-              <CardContent className="flex gap-4">
-                <Button asChild>
-                  <Link href="/register">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Yeni Randevu Oluştur
-                  </Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link href="/services">
-                    Hizmetleri İncele
-                  </Link>
-                </Button>
-              </CardContent>
+                <CardHeader>
+                    <CardTitle>Hızlı Eylemler</CardTitle>
+                </CardHeader>
+                <CardContent className="flex gap-4">
+                     <Button asChild>
+                        <Link href="/register">
+                          <PlusCircle className="mr-2 h-4 w-4" />
+                          Yeni Randevu Oluştur
+                        </Link>
+                     </Button>
+                     <Button variant="outline" asChild>
+                        <Link href="/services">
+                          Hizmetleri İncele
+                        </Link>
+                     </Button>
+                </CardContent>
             </Card>
           </motion.div>
         );
@@ -92,23 +92,23 @@ export default function AccountPage() {
         return (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold tracking-tight">Randevularım</h2>
-              <Button asChild>
-                <Link href="/register">
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Yeni Randevu
-                </Link>
-              </Button>
+                 <h2 className="text-3xl font-bold tracking-tight">Randevularım</h2>
+                 <Button asChild>
+                    <Link href="/register">
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Yeni Randevu
+                    </Link>
+                 </Button>
             </div>
             <Card>
               <CardContent className="pt-6">
-                {isLoadingAppointments ? (
+                  {isLoadingAppointments ? (
                   <div className="space-y-4">
                     {Array.from({ length: 3 }).map((_, i) => (
                       <Skeleton key={i} className="h-20 w-full" />
                     ))}
                   </div>
-                ) : appointments && appointments.length > 0 ? (
+                  ) : appointments && appointments.length > 0 ? (
                   <div className="space-y-4">
                     {appointments.map((appointment: any) => (
                       <div key={appointment.id} className="border rounded-lg p-4">
@@ -125,47 +125,47 @@ export default function AccountPage() {
                       </div>
                     ))}
                   </div>
-                ) : (
+                  ) : (
                   <div className="text-center py-12">
                     <p className="text-muted-foreground">Henüz bir randevunuz yok.</p>
                     <Button asChild className="mt-4">
                       <Link href="/register">Yeni Randevu Oluştur</Link>
                     </Button>
                   </div>
-                )}
+                  )}
               </CardContent>
             </Card>
           </motion.div>
         );
       case 'Profilim':
-        return (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h2 className="text-3xl font-bold tracking-tight mb-6">Profilim</h2>
-            <Card>
-              <CardHeader>
-                <CardTitle>Kişisel Bilgiler</CardTitle>
-                <CardDescription>Bilgilerinizi buradan güncelleyebilirsiniz.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+         return (
+             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                <h2 className="text-3xl font-bold tracking-tight mb-6">Profilim</h2>
+                <Card>
+                    <CardHeader>
+                      <CardTitle>Kişisel Bilgiler</CardTitle>
+                      <CardDescription>Bilgilerinizi buradan güncelleyebilirsiniz.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
                   Profil yönetimi yakında eklenecek.
                 </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        );
+                    </CardContent>
+                </Card>
+             </motion.div>
+         );
       case 'Ayarlar':
-        return (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h2 className="text-3xl font-bold tracking-tight mb-6">Ayarlar</h2>
-            <Card>
-              <CardHeader><CardTitle>Bildirim Ayarları</CardTitle></CardHeader>
+         return (
+             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                <h2 className="text-3xl font-bold tracking-tight mb-6">Ayarlar</h2>
+                <Card>
+                    <CardHeader><CardTitle>Bildirim Ayarları</CardTitle></CardHeader>
               <CardContent>
                 <p>Yakında buradan randevu hatırlatmaları ve kampanya bildirimlerinizi yönetebileceksiniz.</p>
               </CardContent>
-            </Card>
-          </motion.div>
-        );
+                </Card>
+             </motion.div>
+         );
       default:
         return <div>Bölüm bulunamadı.</div>;
     }
@@ -177,7 +177,7 @@ export default function AccountPage() {
       <aside className="hidden w-64 flex-col border-r bg-background sm:flex">
         <div className="flex h-16 items-center border-b px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <Scissors className="text-primary h-6 w-6"/>
+             <Scissors className="text-primary h-6 w-6"/>
             <span className="">{settings?.brandName}</span>
           </Link>
         </div>

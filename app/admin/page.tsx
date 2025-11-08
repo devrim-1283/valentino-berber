@@ -27,9 +27,11 @@ export default function AdminLoginPage() {
     }
 
     setIsLoading(true);
-      setError('');
+    setError('');
 
     try {
+      console.log('[FRONTEND] Attempting login:', { username, passwordLength: password.length });
+      
       const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: {
@@ -39,26 +41,39 @@ export default function AdminLoginPage() {
       });
 
       const result = await response.json();
+      console.log('[FRONTEND] Login response:', { status: response.status, ok: response.ok, result });
 
       if (!response.ok) {
-        throw new Error(result.error || 'Giriş başarısız');
+        const errorMsg = result.error || result.message || 'Giriş başarısız';
+        console.error('[FRONTEND] Login failed:', errorMsg);
+        throw new Error(errorMsg);
       }
 
-      if (result.authenticated) {
-      sessionStorage.setItem('isAdminAuthenticated', 'true');
-      toast({
-        title: 'Giriş Başarılı',
-        description: 'Yönetici paneline yönlendiriliyorsunuz.',
-      });
-      router.push('/admin/dashboard');
-    } else {
-      setError('Hatalı şifre. Lütfen tekrar deneyin.');
+      if (result.success && result.authenticated) {
+        console.log('[FRONTEND] Login successful, setting session');
+        sessionStorage.setItem('isAdminAuthenticated', 'true');
+        toast({
+          title: 'Giriş Başarılı',
+          description: 'Yönetici paneline yönlendiriliyorsunuz.',
+        });
+        router.push('/admin/dashboard');
+      } else {
+        const errorMsg = 'Kimlik doğrulama başarısız oldu.';
+        console.error('[FRONTEND] Authentication failed:', result);
+        setError(errorMsg);
+        toast({
+          title: 'Hata',
+          description: errorMsg,
+          variant: 'destructive',
+        });
       }
     } catch (err: any) {
-      setError(err.message || 'Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.');
+      const errorMsg = err.message || 'Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.';
+      console.error('[FRONTEND] Login error:', err);
+      setError(errorMsg);
       toast({
         title: 'Hata',
-        description: err.message || 'Giriş yapılamadı.',
+        description: errorMsg,
         variant: 'destructive',
       });
     } finally {
