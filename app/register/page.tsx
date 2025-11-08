@@ -196,10 +196,19 @@ export default function RegisterPage() {
 
   const handleSelectChange = (name: string, value: string | Date | undefined) => {
     if (name === 'date') {
-      setFormData(prev => ({...prev, [name]: value, time: ''})); // Reset time when date changes
+      // Ensure date is always Date | undefined, never string
+      const dateValue: Date | undefined = value instanceof Date ? value : value ? new Date(value as string) : undefined;
+      setFormData(prev => ({
+        ...prev,
+        date: dateValue,
+        time: '' // Reset time when date changes
+      }));
       setDatePickerOpen(false); // Close popover on select
     } else {
-      setFormData(prev => ({...prev, [name]: value}));
+      setFormData(prev => ({
+        ...prev,
+        [name]: value as string
+      }));
     }
   }
 
@@ -256,9 +265,47 @@ export default function RegisterPage() {
     setSubmitError(null);
 
     try {
-      const appointmentDateTime = formData.date 
-        ? setMinutes(setHours(formData.date, parseInt(formData.time?.split(':')[0] || '0')), parseInt(formData.time?.split(':')[1] || '0'))
-        : new Date();
+      // Validate required fields
+      if (!formData.barber) {
+        toast({
+          title: 'Hata',
+          description: 'Lütfen bir berber seçin.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (!formData.customerName) {
+        toast({
+          title: 'Hata',
+          description: 'Lütfen adınızı girin.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (!formData.customerPhone) {
+        toast({
+          title: 'Hata',
+          description: 'Lütfen telefon numaranızı girin.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (!formData.date || !formData.time) {
+        toast({
+          title: 'Hata',
+          description: 'Lütfen tarih ve saat seçin.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const appointmentDateTime = setMinutes(
+        setHours(formData.date, parseInt(formData.time.split(':')[0] || '0')), 
+        parseInt(formData.time.split(':')[1] || '0')
+      );
 
       await createAppointment({
         serviceId: formData.services?.join(', ') || '',

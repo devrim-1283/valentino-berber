@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
 import { hashPassword, comparePassword, validatePasswordStrength } from '@/lib/auth';
 
+// Force dynamic rendering - don't pre-render at build time
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();

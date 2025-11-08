@@ -19,35 +19,35 @@ const galleryImages = [
 ];
 
 const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
   const { settings, isLoading } = useSiteSettings();
 
-  return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-background/80 backdrop-blur-sm border-b border-border/50' : 'bg-transparent'}`}>
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <div className="flex items-center gap-2">
-          <Scissors className="text-primary h-6 w-6"/>
+    return (
+        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-background/80 backdrop-blur-sm border-b border-border/50' : 'bg-transparent'}`}>
+            <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+                <div className="flex items-center gap-2">
+                    <Scissors className="text-primary h-6 w-6"/>
           <span className="text-lg font-bold">{isLoading ? '...' : settings?.brandName}</span>
-        </div>
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          <Link href="/" className="text-muted-foreground transition-colors hover:text-primary">Anasayfa</Link>
-          <Link href="/services" className="text-muted-foreground transition-colors hover:text-primary">Hizmetler</Link>
+                </div>
+                <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+                    <Link href="/" className="text-muted-foreground transition-colors hover:text-primary">Anasayfa</Link>
+                    <Link href="/services" className="text-muted-foreground transition-colors hover:text-primary">Hizmetler</Link>
           <Link href="/gallery" className="text-muted-foreground transition-colors hover:text-primary">Galeri</Link>
-          <Link href="/about" className="text-muted-foreground transition-colors hover:text-primary">Hakkımızda</Link>
-        </nav>
-        <div className="flex items-center gap-4">
-          <Link href="/register">
-            <Button variant="outline" size="sm">
-              Giriş Yap
-            </Button>
-          </Link>
-          <a href="/register">
-            <Button size="sm">Hemen Randevu Al</Button>
-          </a>
-        </div>
-      </div>
-    </header>
-  );
+                    <Link href="/about" className="text-muted-foreground transition-colors hover:text-primary">Hakkımızda</Link>
+                </nav>
+                 <div className="flex items-center gap-4">
+                            <Link href="/register">
+                                <Button variant="outline" size="sm">
+                                    Giriş Yap
+                                </Button>
+                            </Link>
+                            <a href="/register">
+                                <Button size="sm">Hemen Randevu Al</Button>
+                            </a>
+                </div>
+            </div>
+        </header>
+    );
 };
 
 const Footer = () => {
@@ -59,13 +59,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <Scissors className="text-white h-6 w-6"/>
+               <Scissors className="text-white h-6 w-6"/>
               <span className="text-xl font-bold">{settings?.brandName || 'Valentino'}</span>
             </div>
             <p className="text-sm text-primary-foreground/80">
               Modern erkeğin stil durağı.
             </p>
-            <div className="flex gap-4 mt-2">
+             <div className="flex gap-4 mt-2">
               {settings?.instagramUrl && (
                 <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-primary-foreground/80 hover:text-white transition-colors">
                   <Disc className="w-5 h-5" />
@@ -74,15 +74,15 @@ const Footer = () => {
             </div>
           </div>
           <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-semibold mb-4">Hızlı Erişim</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/" className="text-primary-foreground/80 hover:text-white transition-colors">Anasayfa</Link></li>
-                <li><Link href="/services" className="text-primary-foreground/80 hover:text-white transition-colors">Hizmetler</Link></li>
-                <li><Link href="/gallery" className="text-primary-foreground/80 hover:text-white transition-colors">Galeri</Link></li>
-                <li><Link href="/about" className="text-primary-foreground/80 hover:text-white transition-colors">Hakkımızda</Link></li>
-              </ul>
-            </div>
+              <div>
+                <h3 className="font-semibold mb-4">Hızlı Erişim</h3>
+                <ul className="space-y-2 text-sm">
+                  <li><Link href="/" className="text-primary-foreground/80 hover:text-white transition-colors">Anasayfa</Link></li>
+                  <li><Link href="/services" className="text-primary-foreground/80 hover:text-white transition-colors">Hizmetler</Link></li>
+                   <li><Link href="/gallery" className="text-primary-foreground/80 hover:text-white transition-colors">Galeri</Link></li>
+                  <li><Link href="/about" className="text-primary-foreground/80 hover:text-white transition-colors">Hakkımızda</Link></li>
+                </ul>
+              </div>
           </div>
           <div className="space-y-4">
             <h3 className="font-semibold">Bültenimize Abone Olun</h3>
@@ -149,12 +149,12 @@ export default function CommunityPage() {
         </div>
 
         <div className="text-center mt-16">
-          <p className="text-lg text-muted-foreground mb-4">Gördüklerinizi beğendiniz mi? Stilinizi bizimle bulun.</p>
-          <Button size="lg" asChild>
-            <Link href="/register">
-              Randevu Alın <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+            <p className="text-lg text-muted-foreground mb-4">Gördüklerinizi beğendiniz mi? Stilinizi bizimle bulun.</p>
+            <Button size="lg" asChild>
+                <Link href="/register">
+                    Randevu Alın <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+            </Button>
         </div>
       </main>
       <Footer />

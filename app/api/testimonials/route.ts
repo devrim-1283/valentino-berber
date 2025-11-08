@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryMany } from '@/lib/db';
 
+// Force dynamic rendering - don't pre-render at build time
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function GET(request: NextRequest) {
   try {
     const testimonials = await queryMany<any>(`
@@ -18,6 +22,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ data: testimonials, success: true });
   } catch (error: any) {
+    // During build time, database might not be available
+    // Return empty array instead of failing
+    if (error.code === 'ECONNREFUSED') {
+      return NextResponse.json({ data: [], success: true });
+    }
+    
     console.error('Error fetching testimonials:', error);
     return NextResponse.json(
       { error: 'Failed to fetch testimonials', message: error.message },

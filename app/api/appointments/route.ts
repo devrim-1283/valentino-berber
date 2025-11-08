@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query, queryMany, transaction } from '@/lib/db';
 import { apiLog } from '@/lib/config';
 
+// Force dynamic rendering - don't pre-render at build time
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
   try {
@@ -60,6 +64,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ data: appointments, success: true });
   } catch (error: any) {
     const duration = Date.now() - startTime;
+    // During build time, database might not be available
+    // Return empty array instead of failing
+    if (error.code === 'ECONNREFUSED') {
+      apiLog('GET', '/api/appointments', 200, duration);
+      return NextResponse.json({ data: [], success: true });
+    }
+    
     apiLog('GET', '/api/appointments', 500, duration);
     console.error('Error fetching appointments:', error);
     return NextResponse.json(

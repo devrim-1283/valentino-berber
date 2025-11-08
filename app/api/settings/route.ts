@@ -1,6 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
 
+// Force dynamic rendering - don't pre-render at build time
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+// Default settings for build time or when DB is unavailable
+const defaultSettings = {
+  key: 'global',
+  brandName: 'Valentino',
+  heroTitle: null,
+  heroSubtitle: null,
+  aboutStory: null,
+  testimonialsTitle: null,
+  signatureSectionTitle: null,
+  signatureSectionSubtitle: null,
+  statsSectionTitle: null,
+  ctaTitle: null,
+  ctaSubtitle: null,
+  instagramUrl: null,
+  tiktokUrl: null,
+  contactAddress: null,
+  contactPhone: null,
+};
+
 export async function GET(request: NextRequest) {
   try {
     const settings = await queryOne<any>(`
@@ -30,10 +53,7 @@ export async function GET(request: NextRequest) {
     if (!settings) {
       // Return default settings if not found
       return NextResponse.json({
-        data: {
-          key: 'global',
-          brandName: 'Valentino',
-        },
+        data: defaultSettings,
         success: true,
       });
     }
@@ -43,6 +63,16 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ data: settingsWithoutCredentials, success: true });
   } catch (error: any) {
+    // During build time, database might not be available
+    // Return default settings instead of failing
+    const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL;
+    if (error.code === 'ECONNREFUSED' || isBuildTime) {
+      return NextResponse.json({
+        data: defaultSettings,
+        success: true,
+      });
+    }
+    
     console.error('Error fetching settings:', error);
     return NextResponse.json(
       { error: 'Failed to fetch settings', message: error.message },

@@ -45,7 +45,7 @@ function getPool(): Pool {
 /**
  * Execute a query and return results
  */
-export async function query<T = any>(
+export async function query<T extends Record<string, any> = any>(
   text: string,
   params?: any[]
 ): Promise<QueryResult<T>> {
@@ -88,7 +88,7 @@ export async function transaction<T>(
 /**
  * Get a single row from a query
  */
-export async function queryOne<T = any>(
+export async function queryOne<T extends Record<string, any> = any>(
   text: string,
   params?: any[]
 ): Promise<T | null> {
@@ -99,7 +99,7 @@ export async function queryOne<T = any>(
 /**
  * Get multiple rows from a query
  */
-export async function queryMany<T = any>(
+export async function queryMany<T extends Record<string, any> = any>(
   text: string,
   params?: any[]
 ): Promise<T[]> {

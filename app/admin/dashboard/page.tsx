@@ -350,7 +350,7 @@ export default function AdminDashboardPage() {
             serviceIds.forEach(serviceId => {
               const service = services.find(s => s.id === serviceId);
               const serviceName = service?.name || serviceId;
-              acc[serviceName] = (acc[serviceName] || 0) + 1;
+            acc[serviceName] = (acc[serviceName] || 0) + 1;
             });
           }
           return acc;
