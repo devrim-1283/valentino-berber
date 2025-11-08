@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { query, queryOne } from '@/lib/db';
 import { hashPassword, comparePassword, validatePasswordStrength } from '@/lib/auth';
 
 export async function PUT(request: NextRequest) {
