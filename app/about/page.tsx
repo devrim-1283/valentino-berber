@@ -221,11 +221,20 @@ export default function AboutPage() {
                     <Skeleton className="h-5 w-full"/>
                     <Skeleton className="h-5 w-4/5"/>
                   </div>
-                ) : (
+                ) : settings?.aboutStory ? (
                   <div className="space-y-4 text-muted-foreground">
-                    {settings?.aboutStory.split('\n\n').map((paragraph, index) => (
+                    {settings.aboutStory.split('\n\n').map((paragraph, index) => (
                       <p key={index} className="text-base leading-relaxed">{paragraph}</p>
                     ))}
+                  </div>
+                ) : (
+                  <div className="space-y-4 text-muted-foreground">
+                    <p className="text-base leading-relaxed">
+                      Valentino, bir makas ve bir tarakla başlayan bir tutkunun hikayesidir. 15 yılı aşkın tecrübemizle, klasik berberlik geleneklerini modern bir vizyonla birleştirerek, her müşterimize özel bir deneyim sunuyoruz.
+                    </p>
+                    <p className="text-base leading-relaxed">
+                      Her saç kesimi bir sanat eseri, her müşteri ise bizim için değerli bir dosttur. Sadece bir hizmet değil, aynı zamanda bir deneyim sunuyoruz.
+                    </p>
                   </div>
                 )}
 
