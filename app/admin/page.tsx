@@ -6,12 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { KeyRound, LogIn, Scissors } from 'lucide-react';
+import { KeyRound, LogIn, Scissors, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { useSiteSettings } from '@/lib/hooks/use-settings';
 
 export default function AdminLoginPage() {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -20,8 +21,8 @@ export default function AdminLoginPage() {
   const { settings, isLoading: isLoadingSettings } = useSiteSettings();
 
   const handleLogin = async () => {
-    if (!password) {
-      setError('Lütfen şifrenizi girin.');
+    if (!username || !password) {
+      setError('Lütfen kullanıcı adı ve şifrenizi girin.');
       return;
     }
 
@@ -34,7 +35,7 @@ export default function AdminLoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const result = await response.json();
@@ -89,9 +90,24 @@ export default function AdminLoginPage() {
               <h1 className="text-2xl font-bold">{isLoadingSettings ? '...' : settings?.brandName}</h1>
             </div>
             <CardTitle className="text-xl">Yönetici Paneli</CardTitle>
-            <CardDescription>Lütfen devam etmek için şifrenizi girin.</CardDescription>
+            <CardDescription>Lütfen devam etmek için giriş bilgilerinizi girin.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">Kullanıcı Adı</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Kullanıcı adı (örn: admin)"
+                  className="pl-10"
+                />
+              </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="password">Şifre</Label>
               <div className="relative">
@@ -102,7 +118,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="********"
+                  placeholder="Şifrenizi girin"
                   className="pl-10"
                 />
               </div>

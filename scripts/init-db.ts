@@ -12,21 +12,24 @@ async function initDatabase() {
     console.log('Initializing database...');
 
     // Hash default admin password
+    const defaultUsername = 'admin';
     const defaultPassword = 'VALENTINO2024';
     const hashedPassword = await hashPassword(defaultPassword);
 
-    // Update or insert settings with admin password
+    // Update or insert settings with admin credentials
     await query(`
-      INSERT INTO settings (key, brand_name, admin_password) 
-      VALUES ('global', 'Valentino', $1)
+      INSERT INTO settings (key, brand_name, admin_username, admin_password) 
+      VALUES ('global', 'Valentino', $1, $2)
       ON CONFLICT (key) DO UPDATE SET
-        admin_password = EXCLUDED.admin_password
-      WHERE settings.admin_password IS NULL
-    `, [hashedPassword]);
+        admin_username = COALESCE(EXCLUDED.admin_username, settings.admin_username, $1),
+        admin_password = COALESCE(EXCLUDED.admin_password, settings.admin_password, $2)
+      WHERE settings.admin_password IS NULL OR settings.admin_username IS NULL
+    `, [defaultUsername, hashedPassword]);
 
     console.log('Database initialized successfully!');
+    console.log('Default admin username: admin');
     console.log('Default admin password: VALENTINO2024');
-    console.log('Please change the password after first login.');
+    console.log('Please change the credentials after first login.');
   } catch (error) {
     console.error('Error initializing database:', error);
     process.exit(1);

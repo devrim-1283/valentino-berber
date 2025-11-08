@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS settings (
     stats_section_title TEXT,
     cta_title TEXT,
     cta_subtitle TEXT,
+    admin_username VARCHAR(255) DEFAULT 'admin',
     admin_password TEXT, -- bcrypt hashed password
     instagram_url TEXT,
     tiktok_url TEXT,
@@ -119,10 +120,11 @@ CREATE TRIGGER update_testimonials_updated_at BEFORE UPDATE ON testimonials
 CREATE TRIGGER update_gallery_updated_at BEFORE UPDATE ON gallery
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Insert default settings (admin_password will be set by init-db script)
+-- Insert default settings (admin credentials will be set by init-db script)
+-- Default username: admin
 -- Default password: VALENTINO2024
--- Run: npm run init-db (or tsx scripts/init-db.ts) after migration to set the admin password
-INSERT INTO settings (key, brand_name) 
-VALUES ('global', 'Valentino')
+-- Run: npm run init-db (or tsx scripts/init-db.ts) after migration to set the admin credentials
+INSERT INTO settings (key, brand_name, admin_username) 
+VALUES ('global', 'Valentino', 'admin')
 ON CONFLICT (key) DO NOTHING;
 

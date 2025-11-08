@@ -38,10 +38,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Don't return admin password
-    const { admin_password, ...settingsWithoutPassword } = settings;
+    // Don't return admin credentials
+    const { admin_password, admin_username, ...settingsWithoutCredentials } = settings;
 
-    return NextResponse.json({ data: settingsWithoutPassword, success: true });
+    return NextResponse.json({ data: settingsWithoutCredentials, success: true });
   } catch (error: any) {
     console.error('Error fetching settings:', error);
     return NextResponse.json(
@@ -131,9 +131,9 @@ export async function PUT(request: NextRequest) {
       contactPhone || null,
     ]);
 
-    const { admin_password, ...settingsWithoutPassword } = result.rows[0];
+    const { admin_password, admin_username, ...settingsWithoutCredentials } = result.rows[0];
 
-    return NextResponse.json({ data: settingsWithoutPassword, success: true });
+    return NextResponse.json({ data: settingsWithoutCredentials, success: true });
   } catch (error: any) {
     console.error('Error updating settings:', error);
     return NextResponse.json(

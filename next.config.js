@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone', // For Docker deployment
+  output: 'standalone',
   experimental: {
     serverActions: true,
   },

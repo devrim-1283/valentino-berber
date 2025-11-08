@@ -110,25 +110,36 @@ function AddBarberDialog({ onBarberAdded }: { onBarberAdded: () => void }) {
     )
 }
 
-function ChangePasswordDialog() {
+function ChangeCredentialsDialog() {
+    const [currentUsername, setCurrentUsername] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
+    const [newUsername, setNewUsername] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const { toast } = useToast();
 
-    const handleChangePassword = async () => {
-        if (!currentPassword || !newPassword || !confirmPassword) {
+    const handleChangeCredentials = async () => {
+        if (!currentUsername || !currentPassword) {
             toast({
                 title: "Hata",
-                description: "Tüm alanlar doldurulmalıdır.",
+                description: "Mevcut kullanıcı adı ve şifre gereklidir.",
                 variant: "destructive"
             });
             return;
         }
 
-        if (newPassword !== confirmPassword) {
+        if (!newUsername && !newPassword) {
+            toast({
+                title: "Hata",
+                description: "Yeni kullanıcı adı veya şifre belirtmelisiniz.",
+                variant: "destructive"
+            });
+            return;
+        }
+
+        if (newPassword && newPassword !== confirmPassword) {
             toast({
                 title: "Hata",
                 description: "Yeni şifreler eşleşmiyor.",
@@ -137,7 +148,7 @@ function ChangePasswordDialog() {
             return;
         }
 
-        if (newPassword.length < 6) {
+        if (newPassword && newPassword.length < 6) {
             toast({
                 title: "Hata",
                 description: "Şifre en az 6 karakter olmalıdır.",
@@ -146,37 +157,50 @@ function ChangePasswordDialog() {
             return;
         }
 
+        if (newUsername && newUsername.length < 3) {
+            toast({
+                title: "Hata",
+                description: "Kullanıcı adı en az 3 karakter olmalıdır.",
+                variant: "destructive"
+            });
+            return;
+        }
+
         setIsLoading(true);
         try {
-            const response = await fetch('/api/admin/change-password', {
+            const response = await fetch('/api/admin/change-credentials', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    currentUsername,
                     currentPassword,
-                    newPassword,
+                    newUsername: newUsername || undefined,
+                    newPassword: newPassword || undefined,
                 }),
             });
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.error || 'Şifre değiştirilemedi');
+                throw new Error(error.error || 'Bilgiler değiştirilemedi');
             }
 
             toast({
                 title: "Başarılı",
-                description: "Şifre başarıyla değiştirildi."
+                description: "Bilgiler başarıyla güncellendi."
             });
 
+            setCurrentUsername('');
             setCurrentPassword('');
+            setNewUsername('');
             setNewPassword('');
             setConfirmPassword('');
             setOpen(false);
         } catch (error: any) {
             toast({
                 title: "Hata",
-                description: error.message || "Şifre değiştirilirken bir hata oluştu.",
+                description: error.message || "Bilgiler güncellenirken bir hata oluştu.",
                 variant: "destructive"
             });
         } finally {
@@ -189,17 +213,27 @@ function ChangePasswordDialog() {
             <DialogTrigger asChild>
                 <Button variant="outline">
                     <KeyRound className="mr-2 h-4 w-4" />
-                    Şifre Değiştir
+                    Kullanıcı Adı & Şifre Değiştir
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Şifre Değiştir</DialogTitle>
+                    <DialogTitle>Kullanıcı Adı & Şifre Değiştir</DialogTitle>
                     <DialogDescription>
-                        Mevcut şifrenizi girip yeni şifrenizi belirleyin.
+                        Mevcut bilgilerinizi girip değiştirmek istediğiniz bilgileri güncelleyin.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="current-username">Mevcut Kullanıcı Adı</Label>
+                        <Input 
+                            id="current-username" 
+                            type="text" 
+                            value={currentUsername} 
+                            onChange={(e) => setCurrentUsername(e.target.value)} 
+                            placeholder="Mevcut kullanıcı adınızı girin"
+                        />
+                    </div>
                     <div className="space-y-2">
                         <Label htmlFor="current-password">Mevcut Şifre</Label>
                         <Input 
@@ -210,33 +244,50 @@ function ChangePasswordDialog() {
                             placeholder="Mevcut şifrenizi girin"
                         />
                     </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="new-password">Yeni Şifre</Label>
-                        <Input 
-                            id="new-password" 
-                            type="password" 
-                            value={newPassword} 
-                            onChange={(e) => setNewPassword(e.target.value)} 
-                            placeholder="Yeni şifrenizi girin"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="confirm-password">Yeni Şifre (Tekrar)</Label>
-                        <Input 
-                            id="confirm-password" 
-                            type="password" 
-                            value={confirmPassword} 
-                            onChange={(e) => setConfirmPassword(e.target.value)} 
-                            placeholder="Yeni şifrenizi tekrar girin"
-                        />
+                    <div className="border-t pt-4">
+                        <p className="text-sm text-muted-foreground mb-4">Yeni bilgiler (değiştirmek istediğiniz alanları doldurun)</p>
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="new-username">Yeni Kullanıcı Adı (Opsiyonel)</Label>
+                                <Input 
+                                    id="new-username" 
+                                    type="text" 
+                                    value={newUsername} 
+                                    onChange={(e) => setNewUsername(e.target.value)} 
+                                    placeholder="Yeni kullanıcı adınızı girin"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="new-password">Yeni Şifre (Opsiyonel)</Label>
+                                <Input 
+                                    id="new-password" 
+                                    type="password" 
+                                    value={newPassword} 
+                                    onChange={(e) => setNewPassword(e.target.value)} 
+                                    placeholder="Yeni şifrenizi girin"
+                                />
+                            </div>
+                            {newPassword && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="confirm-password">Yeni Şifre (Tekrar)</Label>
+                                    <Input 
+                                        id="confirm-password" 
+                                        type="password" 
+                                        value={confirmPassword} 
+                                        onChange={(e) => setConfirmPassword(e.target.value)} 
+                                        placeholder="Yeni şifrenizi tekrar girin"
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>
                         İptal
                     </Button>
-                    <Button onClick={handleChangePassword} disabled={isLoading}>
-                        {isLoading ? 'Değiştiriliyor...' : 'Değiştir'}
+                    <Button onClick={handleChangeCredentials} disabled={isLoading}>
+                        {isLoading ? 'Güncelleniyor...' : 'Güncelle'}
                     </Button>
                 </DialogFooter>
             </DialogContent>
@@ -699,7 +750,7 @@ export default function AdminDashboardPage() {
       <div className="flex flex-1 flex-col">
         <header className="flex h-16 items-center justify-between border-b bg-background px-6">
            <span className="font-semibold">Hoş Geldiniz, Yönetici</span>
-           <ChangePasswordDialog />
+           <ChangeCredentialsDialog />
         </header>
         <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
             {renderContent()}
