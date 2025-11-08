@@ -174,7 +174,7 @@ export default function PrivacyPolicyPage() {
                 
                 <h2>4. Veri Güvenliği</h2>
                 <p>
-                    Kişisel bilgilerinizi korumak için endüstri standardı idari, teknik ve fiziksel güvenlik önlemleri kullanıyoruz. Tüm verileriniz, Firebase (Google) altyapısı üzerinde güvenli bir şekilde saklanmaktadır.
+                    Kişisel bilgilerinizi korumak için endüstri standardı idari, teknik ve fiziksel güvenlik önlemleri kullanıyoruz. Tüm verileriniz, PostgreSQL veritabanı üzerinde güvenli bir şekilde saklanmaktadır.
                 </p>
 
                 <h2>5. Politika Değişiklikleri</h2>

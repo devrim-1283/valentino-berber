@@ -40,9 +40,6 @@ coverage
 *.log
 *.pem
 
-# Firebase (no longer used)
-firebase
-.firebase
 
 # Database
 *.db
